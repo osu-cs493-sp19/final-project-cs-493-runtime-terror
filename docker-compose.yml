@@ -1,5 +1,17 @@
 version: '3.7'
 services:
+  api:
+    build: .
+    image: learning-management-api
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      MYSQL_DATABASE: Tarpaulin 
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password 
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
   mysql:
     image: mysql:5
     restart: always
