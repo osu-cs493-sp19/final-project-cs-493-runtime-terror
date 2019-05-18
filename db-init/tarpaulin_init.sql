@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: asgard-mysql
--- Generation Time: May 18, 2019 at 08:42 PM
+-- Generation Time: May 18, 2019 at 09:27 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.14
 
@@ -30,10 +30,10 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `assignments` (
   `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `due_date` datetime NOT NULL,
   `course_id` int(11) NOT NULL,
-  `description` text NOT NULL
+  `title` varchar(255) NOT NULL,
+  `points` int(11) NOT NULL,
+  `due_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -44,10 +44,11 @@ CREATE TABLE `assignments` (
 
 CREATE TABLE `courses` (
   `id` int(11) NOT NULL,
+  `subject` varchar(11) NOT NULL,
+  `number` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
-  `subject_code` int(11) NOT NULL,
-  `instructor_name` varchar(255) NOT NULL,
-  `instructor_email` varchar(255) NOT NULL
+  `term` varchar(11) NOT NULL,
+  `instructor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -69,10 +70,10 @@ CREATE TABLE `course_enrollment` (
 
 CREATE TABLE `submissions` (
   `id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `file` blob NOT NULL,
-  `course_id` int(11) NOT NULL
+  `file` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -83,9 +84,10 @@ CREATE TABLE `submissions` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `role` varchar(10) NOT NULL,
+  `name` text NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `role` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
