@@ -9,7 +9,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_DATABASE: ${MYSQL_DATABASE} || 'Tarpaulin'
-      MYSQL_USER: ${MYSQL_USER} || 'user'
+      MYSQL_USER: ${MYSQL_USER} || 'admin'
       MYSQL_PASSWORD: ${MYSQL_PASSWORD} || 'password'
 
   phpmyadmin:
