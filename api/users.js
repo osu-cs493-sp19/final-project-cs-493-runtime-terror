@@ -1,8 +1,23 @@
 const router = require('express').Router();
 
+const { validateAgainstSchema } = require('../lib/validation');
+const { generateAuthToken, requireAuthentication } = require('../lib/auth');
+const {UsersSchema} = require('../models/user');
+
 /*
- * Route ex to get all users
+ * test route
  */
-router.get('/', async (req, res, next) => {
-        res.status(200).send({ ex: "stuff here" });
-  });
+router.get('/', async (req, res) => {
+    try {
+      res.status(201).send({
+        status: `EXAMPLEROUTE`
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        error: "Error"
+      });
+    }
+});
+
+module.exports = router;

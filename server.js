@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-//const api = require('./api');
+const api = require('./api');
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -21,7 +21,7 @@ app.use(express.static('public'));
  * it provides all of the routes.
  */
 
-//app.use('/', api);
+app.use('/', api);
 
 app.use('*', function (req, res, next) {
   res.status(404).json({
