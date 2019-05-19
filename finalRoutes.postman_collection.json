@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "c9ce76bf-c74f-4524-b8ca-399f56675e9d",
+		"name": "finalRoutes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create a User Copy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n \"name\": \"Rob Hess\",\r\n \"email\": \"hessro@oregonstate.edu\",\r\n \"password\": \"password\",\r\n \"role\": \"instructor\"\r\n \r\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100:8000/users/",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
