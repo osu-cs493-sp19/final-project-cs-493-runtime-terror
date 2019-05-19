@@ -1,3 +1,6 @@
+const bcrypt = require('bcryptjs');
+const mysqlPool = require('../lib/mysqlPool');
+const { extractValidFields } = require('../lib/validation');
 /*
  * Schema describing fields of a user object.
  */
