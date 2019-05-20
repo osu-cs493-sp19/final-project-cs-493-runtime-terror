@@ -15,12 +15,14 @@ router.post('/', async (req, res) => {
           status: `error`,
           error: `The request was not made by an authenticated User. Please use /user/admin and supply admin credentials.`
         });
+      else{
       const id = await insertNewUser(req.body);
       res.status(201).send({
         status: `success`,
         success: `New user successfully added.`,
         id: id
       });
+    }
     } catch (err) {
       console.error(err);
       res.status(500).send({
