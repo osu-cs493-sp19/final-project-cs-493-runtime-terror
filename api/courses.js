@@ -9,12 +9,14 @@ const {CourseSchema} = require('../models/course');
 router.get('/', async (req, res) => {
     try {
       res.status(201).send({
-        status: `list courses here`
+        status: `success`,
+        success: `All courses were successfully fetched.`
       });
     } catch (err) {
       console.error(err);
       res.status(500).send({
-        error: "Error"
+        status: "error",
+        error: `Unable to fetch all courses.`
       });
     }
 });
@@ -25,12 +27,14 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should create a course here`
+      status: `success`,
+      success: `New course successfully created`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to create new course."
     });
   }
 });
@@ -41,12 +45,14 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should fetch data about a specific course`
+      status: `success`,
+      success: `Successfully fetched course data.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to fetch course data."
     });
   }
 });
@@ -57,12 +63,14 @@ router.get('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should patch course info`
+      status: `success`,
+      success: `successfully patched course information.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status:  `error`,
+      error: "Unable to patch course information."
     });
   }
 });
@@ -73,12 +81,14 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should delete course by its id`
+      status: `success`,
+      success: `Course successfully deleted`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to delete course."
     });
   }
 });
@@ -89,12 +99,14 @@ router.delete('/:id', async (req, res) => {
 router.get('/:id/students', async (req, res) => {
   try {
     res.status(201).send({
-      status: `list studens enrolled in a given course`
+      status: `success`,
+      success: `successfully fetched enrolled students.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      error: "error",
+      error: `Unable to fetch enrolled students.`
     });
   }
 });
@@ -105,12 +117,14 @@ router.get('/:id/students', async (req, res) => {
 router.post('/:id/students', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should update student enrollment`
+      status: `success`,
+      success: `Enrollment successfully updated.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Enrollment status update failed."
     });
   }
 });
@@ -121,12 +135,14 @@ router.post('/:id/students', async (req, res) => {
 router.get('/:id/roster', async (req, res) => {
   try {
     res.status(201).send({
-      status: `returns a csv of students enrolled in a given course`
+      status: `success`,
+      success: `CSV file successfully fetched.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to fetch CSV file."
     });
   }
 });
@@ -137,12 +153,14 @@ router.get('/:id/roster', async (req, res) => {
 router.get('/:id/assignments', async (req, res) => {
   try {
     res.status(201).send({
-      status: `returns a list of assignments for a given course`
+      status: `success`,
+      success: `List of assignments successfully fetched.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to fetch assignment list"
     });
   }
 });
