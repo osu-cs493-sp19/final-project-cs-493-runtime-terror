@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n\r\n \"name\": \"Rob Hess\",\r\n \"email\": \"hessro@oregonstate.edu\",\r\n \"password\": \"password\",\r\n \"role\": \"instructor\"\r\n \r\n}"
+					"raw": "{\r\n\r\n \"name\": \"student1\",\r\n \"email\": \"student1@oregonstate.edu\",\r\n \"password\": \"password\",\r\n \"role\": \"student\"\r\n \r\n}"
 				},
 				"url": {
 					"raw": "http://192.168.99.100:8000/users/",
@@ -34,6 +34,136 @@
 					"path": [
 						"users",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an admin user Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJSb2xlIjoiaW5zdHJ1Y3RvciIsImlhdCI6MTU1ODMxMjEwMCwiZXhwIjoxNTU4Mzk4NTAwfQ.gBa_iKw9M_F_20COlnxD56v4dZeS_U_1BUHrIi5HUp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n \"name\": \"admin account\",\r\n \"email\": \"admin@oregonstate.edu\",\r\n \"password\": \"password\",\r\n \"role\": \"admin\"\r\n \r\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100:8000/users/admin",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"admin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Copy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n \"email\": \"student1@oregonstate.edu\",\r\n \"password\": \"password\"\r\n \r\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.100:8000/users/login",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJSb2xlIjoiaW5zdHJ1Y3RvciIsImlhdCI6MTU1ODMxMjEwMCwiZXhwIjoxNTU4Mzk4NTAwfQ.gBa_iKw9M_F_20COlnxD56v4dZeS_U_1BUHrIi5HUp4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "text/plain",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.99.100:8000/users/1",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"100"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"1"
 					]
 				}
 			},
