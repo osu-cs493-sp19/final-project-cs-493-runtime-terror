@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 19, 2019 at 12:51 AM
+-- Generation Time: May 20, 2019 at 06:51 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.14
 
@@ -145,29 +145,29 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
+-- All passwords are "hunter2"
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
-(1, 'Rob Hess', 'hess@mail.com', 'hunter2', 'instructor'),
-(2, 'Rebecca Hutchinson', 'hutchinson@mail.com', 'hunter2', 'instructor'),
-(3, 'Xiaoli Fern', 'fern@mail.com', 'hunter2', 'instructor'),
-(4, 'Kendall Staggs', 'staggs@mail.com', 'hunter2', 'instructor'),
-(5, 'Steve Shay', 'shay@mail.com', 'hunter2', 'instructor'),
-(6, 'Ethan Patterson', 'patterson@mail.com', 'hunter2', 'admin'),
-(7, 'Garret Haley', 'haley@mail.com', 'hunter2', 'admin'),
-(8, 'Alea Weeks', 'weeks@mail.com', 'hunter2', 'admin'),
-(9, 'Daniel Domme', 'Domme@mail.com', 'hunter2', 'admin'),
-(10, 'Madyson Osborne', 'osborne@mail.com', 'hunter2', 'student'),
-(11, 'Julius Reilly', 'reilly@mail.com', 'hunter2', 'student'),
-(12, 'Milagros Daniel', 'daniel@mail.com', 'hunter2', 'student'),
-(13, 'Patricia Mccoy', 'mccoy@mail.com', 'hunter2', 'student'),
-(14, 'Kymani Hobbs', 'hobbs@mail.com', 'hunter2', 'student'),
-(15, 'Kole Clarke', 'clarke@mail.com', 'hunter2', 'student'),
-(16, 'Judah Higgins', 'higgins@mail.com', 'hunter2', 'student'),
-(17, 'Max Daniel', 'mdaniel@mail.com', 'hunter2', 'student'),
-(18, 'Zariah Hensley', 'hensley@mail.com', 'hunter2', 'student'),
-(19, 'Piper Sweeney', 'sweeney@mail.com', 'hunter2', 'student'),
-(20, 'Dax Hart', 'hart@mail.com', 'hunter2', 'student'),
-(21, 'Ernest Livingston', 'livingston@mail.com', 'hunter2', 'student');
+(1, 'Rob Hess', 'hess@mail.com', '$2a$08$ZQIHxKuzr6.B6BvQD.Wveu9fwSW0iz2ic4Bnovpz5GtHr5GATSaq6', 'instructor'),
+(2, 'Rebecca Hutchinson', 'hutchinson@mail.com', '$2a$08$4u73HyeCyM/oe2ELHH.61OjysfduAgiy5kQ5uULxi1sEHDroAR8KK', 'instructor'),
+(3, 'Xiaoli Fern', 'fern@mail.com', '$2a$08$UWOPup11MAfcg3ExlVcsweJ7hzUuJYAVvCApGoU.PitAxvLZsKdxm', 'instructor'),
+(4, 'Kendal Staggs', 'staggs@mail.com', '$2a$08$xJg.23YwcF9FahLK85rr5O6X3tikZMNFhKIfchwz/g/64G06fuzDS', 'instructor'),
+(5, 'Steve Shay', 'shay@mail.com', '$2a$08$puPy1fuVFbx6C4SEf1nt/.2Lb9xeJ2680udcYYgcc4NHXNktlAOkS', 'instructor'),
+(6, 'Garret Haley', 'haley@mail.com', '$2a$08$tYwZZ72GxVsR6lGZhueTB.9Fo9lWiWeLaybYOT0X10jpPjmTlJNGG', 'admin'),
+(7, 'Ethan Patterson', 'patterson@mail.com', '$2a$08$itHbZFuR6lCymb2WswB4Zekd0/GL7ED6eYaVXndp3CGSxjp9EGb7a', 'admin'),
+(8, 'Alea Weeks', 'weeks@mail.com', '$2a$08$YZB9U.qsuwormDZjOwZjDeMt4dUSQQE6RCP1zfdtbkcEvFQGtH99.', 'admin'),
+(9, 'Daniel Domme', 'domme@mail.com', '$2a$08$P3x4jag8g1rDvYjWgziU8O/PRb8kVLlI83hfcqJJr3L7gAiqU1Yra', 'admin'),
+(10, 'Madyson Osborne', 'osborne@mail.com', '$2a$08$dvQkKNJBMiWk4nCWtUojG.yEQfXPAyQEJFYmho4v2koDMW1gBrH6u', 'student'),
+(11, 'Julius Reilly', 'reilly@mail.com', '$2a$08$woyxotAKVf8j4O/0sqdNw.R8.H5Q9WWWkLtandHh/9sUnWan5OHyO', 'student'),
+(12, 'Milagros Daniel', 'daniel@mail.com', '$2a$08$5MHmVNgdOBqtxhTwVfs15ef9GPOdaqEA3u5GyUdgi0HAzgfQmEI8y', 'student'),
+(13, 'Patricia Mccoy', 'mccoy@mail.com', '$2a$08$QZkgCCA0puVGExiEgwnPKu0MPBW78gXbepiEchVViojsLjv.MQA1u', 'student'),
+(14, 'Kymani Hobbs', 'hobbs@mail.com', '$2a$08$VmZ0/fB3KcKhfFGqoewfEOc.YP6ZlVTlS158Wl0j6V87D4B.J1Ona', 'student'),
+(15, 'Kole Clarke', 'clarke@mail.com', '$2a$08$r8Npoqaj1hguCHkCQ.ofT.WhksiTL/EzC8qnGf9FWvexPEYST9Klu', 'student'),
+(16, 'Judah Higgins', 'higgins@mail.com', '$2a$08$U7kb2xJMLVofGSQbQ7LEXO7lrR7BbQ9wGZbdySpY7pwSvsTvYoPtG', 'student'),
+(18, 'Zariah Hensley', 'hensley@mail.com', '$2a$08$H.XgZ6PNZhvpjVOUvtknj.32pwpgLPuOPymTaacNOn.8uGBVXHnz.', 'student'),
+(19, 'Piper Sweeney', 'sweeney@mail.com', '$2a$08$qexwQiOo3QbdPlclhLROn.YrTY.8TNk3Yf9CmE9KGOULFIiIjKBUq', 'student'),
+(20, 'Dax Hart', 'hart@mail.com', '$2a$08$LcWcul.epxN7KwG0fGStauctp9/7P9V8S1.Ak6OdChSwwdEpezghe', 'student'),
+(21, 'Ernest Livingston', 'livingston@mail.com', '$2a$08$BGGX409HmaQRWNAmEYfVd.F/p9BovNUsXtfRg5IR2qA5JieWhD/hC', 'student');
 
 --
 -- Indexes for dumped tables
