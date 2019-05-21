@@ -11,12 +11,14 @@ const {SubmissionSchema} = require('../models/submission');
 router.post('/', async (req, res) => {
     try {
       res.status(201).send({
-        status: `should create a new assignment`
+        status: `success`,
+        success: `assignment successfully created.`
       });
     } catch (err) {
       console.error(err);
       res.status(500).send({
-        error: "Error"
+        error: "error",
+        error: "Unable to create assignment"
       });
     }
 });
@@ -27,12 +29,14 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should return assignment data`
+      status: `success`,
+      success: `Data successfully fetched.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: "error",
+      error: "Could not fetch data"
     });
   }
 });
@@ -43,12 +47,14 @@ router.get('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should pach info about specific assignment`
+      status: `success`,
+      success: `Data successfully updated.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: "error",
+      error: `Unable to patch data.`
     });
   }
 });
@@ -59,12 +65,14 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should delte assignment`
+      status: `success`,
+      success: `Assignment successfully deleted.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to deleted specified assignment"
     });
   }
 });
@@ -75,12 +83,14 @@ router.delete('/:id', async (req, res) => {
 router.post('/:id/submissions', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should return list of submissions given an assignment`
+      status: `success`,
+      success: `All submissions successfully fetched.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: `error`,
+      error: "Unable to fetch all submissions"
     });
   }
 });
@@ -91,12 +101,14 @@ router.post('/:id/submissions', async (req, res) => {
 router.post('/:id/submissions', async (req, res) => {
   try {
     res.status(201).send({
-      status: `should create a new submission for an assignment`
+      status: `success`,
+      success: `New submission submitted.`
     });
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      error: "Error"
+      status: "error",
+      error: `Unable to submit new submission.`
     });
   }
 });
