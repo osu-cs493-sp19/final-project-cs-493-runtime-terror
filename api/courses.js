@@ -2,16 +2,27 @@ const router = require('express').Router();
 
 const { validateAgainstSchema } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
-const {CourseSchema} = require('../models/course');
+const { CourseSchema, getCoursesPage } = require('../models/course');
+
 /*
- * Gets a list of all courses
+ * Gets a list of all courses - must be paginated
  */
 router.get('/', async (req, res) => {
+    console.log("req.query.subject:",req.query.subject)
+    console.log("req.query.number:",req.query.number)
+    console.log("req.query.term:",req.query.term)
+
     try {
-      res.status(201).send({
-        status: `success`,
-        success: `All courses were successfully fetched.`
-      });
+      const coursesPage = await getCoursesPage(parseInt(req.query.page || 1), req.query.subject || null, req.query.number || null, req.query.term || null);
+      if (coursesPage.page < coursesPage.totalPages) {
+        coursesPage.links.nextPage = `/courses?page=${coursesPage.page + 1}`;
+        coursesPage.links.lastPage = `/courses?page=${coursesPage.totalPages}`;
+      }
+      if (coursesPage.page > 1) {
+        coursesPage.links.prevPage = `/courses?page=${coursesPage.page - 1}`;
+        coursesPage.links.firstPage = '/courses?page=1';
+      }
+      res.status(200).send(coursesPage);
     } catch (err) {
       console.error(err);
       res.status(500).send({
