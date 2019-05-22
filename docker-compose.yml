@@ -1,5 +1,8 @@
 version: '3.7'
 services:
+  redis:
+    image: redis
+    restart: always
   api:
     build: .
     image: learning-management-api
@@ -12,6 +15,8 @@ services:
       MYSQL_PASSWORD: password 
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
   mysql:
     image: mysql:5
     restart: always
