@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 22, 2019 at 01:57 AM
+-- Generation Time: May 22, 2019 at 02:49 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.14
 
@@ -104,7 +104,6 @@ INSERT INTO `course_enrollment` (`student_id`, `course_id`) VALUES
 (11, 1),
 (12, 1),
 (13, 2),
-(13, 2),
 (14, 2),
 (15, 3),
 (16, 3),
@@ -163,6 +162,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 (14, 'Kymani Hobbs', 'hobbs@mail.com', '$2a$08$VmZ0/fB3KcKhfFGqoewfEOc.YP6ZlVTlS158Wl0j6V87D4B.J1Ona', 'student'),
 (15, 'Kole Clarke', 'clarke@mail.com', '$2a$08$r8Npoqaj1hguCHkCQ.ofT.WhksiTL/EzC8qnGf9FWvexPEYST9Klu', 'student'),
 (16, 'Judah Higgins', 'higgins@mail.com', '$2a$08$U7kb2xJMLVofGSQbQ7LEXO7lrR7BbQ9wGZbdySpY7pwSvsTvYoPtG', 'student'),
+(17, 'John Foo', 'foo@mail.com', '$2a$08$K2yqUv0LQTOVoijduj5X3.aFW699dlXTSil2WTyyptMHIqQrvrWn6', 'student'),
 (18, 'Zariah Hensley', 'hensley@mail.com', '$2a$08$H.XgZ6PNZhvpjVOUvtknj.32pwpgLPuOPymTaacNOn.8uGBVXHnz.', 'student'),
 (19, 'Piper Sweeney', 'sweeney@mail.com', '$2a$08$qexwQiOo3QbdPlclhLROn.YrTY.8TNk3Yf9CmE9KGOULFIiIjKBUq', 'student'),
 (20, 'Dax Hart', 'hart@mail.com', '$2a$08$LcWcul.epxN7KwG0fGStauctp9/7P9V8S1.Ak6OdChSwwdEpezghe', 'student'),
@@ -176,19 +176,30 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 -- Indexes for table `assignments`
 --
 ALTER TABLE `assignments`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `assignments_ibfk_1` (`course_id`);
 
 --
 -- Indexes for table `courses`
 --
 ALTER TABLE `courses`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `course_ibfk_1` (`instructor_id`);
+
+--
+-- Indexes for table `course_enrollment`
+--
+ALTER TABLE `course_enrollment`
+  ADD PRIMARY KEY (`student_id`,`course_id`),
+  ADD KEY `course_enrollment_ibfk_1` (`course_id`),
+  ADD KEY `course_enrollment_ibfk_2` (`student_id`);
 
 --
 -- Indexes for table `submissions`
 --
 ALTER TABLE `submissions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `submissions_ibfk_1` (`assignment_id`);
 
 --
 -- Indexes for table `users`
@@ -224,6 +235,35 @@ ALTER TABLE `submissions`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `assignments`
+--
+ALTER TABLE `assignments`
+  ADD CONSTRAINT `assignments_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `courses`
+--
+ALTER TABLE `courses`
+  ADD CONSTRAINT `course_ibfk_1` FOREIGN KEY (`instructor_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `course_enrollment`
+--
+ALTER TABLE `course_enrollment`
+  ADD CONSTRAINT `course_enrollment_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `course_enrollment_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `submissions`
+--
+ALTER TABLE `submissions`
+  ADD CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
