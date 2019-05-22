@@ -1,9 +1,36 @@
 const router = require('express').Router();
+const multer = require('multer');
+const crypto = require('crypto');
 
 const { validateAgainstSchema } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
 const {AssignmentSchema, insertNewAssignment, getAssignmentById, updateAssignmentById, deleteAssignmentById} = require('../models/assignment');
-const {SubmissionSchema} = require('../models/submission');
+const {SubmissionSchema, saveNewSubmissionInfo} = require('../models/submission');
+
+const fileTypes = {
+  'application/pdf': 'pdf',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+  'application/msword': 'doc',
+  'text/csv': 'csv',
+  'text/plain': 'txt',
+  'application/vnd.ms-excel': 'xls',
+  'application/vnd.ms-powerpoint': 'ppt',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx'
+};
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const basename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = fileTypes[file.mimetype];
+      callback(null, `${basename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!fileTypes[file.mimetype])
+  }
+});
 
 /*
  * creates a new assignment
@@ -143,7 +170,7 @@ router.delete('/:id', requireAuthentication, async (req, res) => {
 /*
  * returns all submissions of a given assignment
  */
-router.post('/:id/submissions', async (req, res) => {
+router.get('/:id/submissions', async (req, res) => {  
   try {
     res.status(201).send({
       status: `success`,
@@ -161,8 +188,32 @@ router.post('/:id/submissions', async (req, res) => {
 /*
  * creates a new submission for an assignment
  */
-router.post('/:id/submissions', async (req, res) => {
-  try {
+router.post('/:id/submissions', requireAuthentication, upload.single('submission'), async (req, res, next) => {
+  
+  console.log("== req.file:", req.file);
+  console.log("== req.body:", req.body);
+  if (req.file && req.body && req.body.assignment_id) {
+      console.log("req.file.path", req.file.path, "req.file.name", req.file.filename);
+    try {
+      const submission = {
+        file: req.file.path,
+        //timestamp: req.body.timestamp,
+        user_id: req.user,
+        //contentType: req.file.mimetype,
+        assignment_id: req.body.assignment_id
+      };
+      const id = await saveNewSubmissionInfo(submission);
+      res.status(200).send({ id: id });
+    } catch (err) {
+      next(err);
+    }
+  } else {
+    res.status(400).send({
+      err: "Request body was invalid."
+    });
+  }
+  
+  /*try {
     res.status(201).send({
       status: `success`,
       success: `New submission submitted.`
@@ -173,6 +224,6 @@ router.post('/:id/submissions', async (req, res) => {
       status: "error",
       error: `Unable to submit new submission.`
     });
-  }
+  }*/
 });
 module.exports = router;
