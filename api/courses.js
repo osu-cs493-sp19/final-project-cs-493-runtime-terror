@@ -2,16 +2,12 @@ const router = require('express').Router();
 
 const { validateAgainstSchema } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
-const { CourseSchema, getCoursesPage } = require('../models/course');
+const { CourseSchema, getCoursesPage, insertNewCourse, getCourseById } = require('../models/course');
 
 /*
  * Gets a list of all courses - must be paginated
  */
 router.get('/', async (req, res) => {
-    console.log("req.query.subject:",req.query.subject)
-    console.log("req.query.number:",req.query.number)
-    console.log("req.query.term:",req.query.term)
-
     try {
       const coursesPage = await getCoursesPage(parseInt(req.query.page || 1), req.query.subject || null, req.query.number || null, req.query.term || null);
       if (coursesPage.page < coursesPage.totalPages) {
@@ -33,19 +29,31 @@ router.get('/', async (req, res) => {
 });
 
 /*
- * Creates a new course
+ * Creates a new course - only admins can perform this action
  */
-router.post('/', async (req, res) => {
-  try {
-    res.status(201).send({
-      status: `success`,
-      success: `New course successfully created`
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      status: `error`,
-      error: "Unable to create new course."
+router.post('/', requireAuthentication, async (req, res) => {
+  if(validateAgainstSchema(req.body, CourseSchema)) {
+    if (req.role == 'admin') {
+      try {
+        const id = await insertNewCourse(req.body);
+        res.status(201).send({
+          _id: id,
+        });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send({
+          status: `error`,
+          error: "Unable to create new course."
+        });
+      }
+    } else {
+      res.status(400).send({
+        error: "The request body was either not present or did not contain a valid Course object."
+      })
+    }
+  } else {
+    res.status(403).send({
+          error: "The request was not made by an authenticated User satisfying the authorization criteria described above."
     });
   }
 });
@@ -55,15 +63,17 @@ router.post('/', async (req, res) => {
  */
 router.get('/:id', async (req, res) => {
   try {
-    res.status(201).send({
-      status: `success`,
-      success: `Successfully fetched course data.`
-    });
+    const course = await getCourseById(parseInt(req.params.id));
+    if (course) {
+      res.status(200).send(course);
+    } else {
+      next();
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send({
       status: `error`,
-      error: "Unable to fetch course data."
+      error: "Unable to fetch course data. Please try again later."
     });
   }
 });
