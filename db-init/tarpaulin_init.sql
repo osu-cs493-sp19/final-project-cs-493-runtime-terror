@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 20, 2019 at 06:51 PM
+-- Generation Time: May 22, 2019 at 01:57 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.14
 
@@ -122,7 +122,7 @@ INSERT INTO `course_enrollment` (`student_id`, `course_id`) VALUES
 
 CREATE TABLE `submissions` (
   `id` int(11) NOT NULL,
-  `course_id` int(11) NOT NULL,
+  `assignment_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `file` blob NOT NULL
@@ -145,7 +145,6 @@ CREATE TABLE `users` (
 --
 -- Dumping data for table `users`
 --
--- All passwords are "hunter2"
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`) VALUES
 (1, 'Rob Hess', 'hess@mail.com', '$2a$08$ZQIHxKuzr6.B6BvQD.Wveu9fwSW0iz2ic4Bnovpz5GtHr5GATSaq6', 'instructor'),
