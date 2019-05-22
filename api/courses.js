@@ -1,8 +1,8 @@
 const router = require('express').Router();
 
-const { validateAgainstSchema } = require('../lib/validation');
+const { validateAgainstSchema, validateFieldsForPatch } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
-const { CourseSchema, getCoursesPage, insertNewCourse, getCourseById } = require('../models/course');
+const { CourseSchema, getCoursesPage, insertNewCourse, getCourseById, patchCourseById } = require('../models/course');
 
 /*
  * Gets a list of all courses - must be paginated
@@ -47,14 +47,14 @@ router.post('/', requireAuthentication, async (req, res) => {
         });
       }
     } else {
-      res.status(400).send({
-        error: "The request body was either not present or did not contain a valid Course object."
-      })
+      res.status(403).send({
+            error: "The request was not made by an authenticated User satisfying the authorization criteria described above."
+      });
     }
   } else {
-    res.status(403).send({
-          error: "The request was not made by an authenticated User satisfying the authorization criteria described above."
-    });
+    res.status(400).send({
+      error: "The request body was either not present or did not contain a valid Course object."
+    })
   }
 });
 
@@ -80,20 +80,51 @@ router.get('/:id', async (req, res) => {
 
 /*
  * Patch course infromation given the id in params and information to change in body.
+ * TODO: write a validateAgainstSchema function for patches since they may
+ * not contain all required fields of a course.
  */
-router.patch('/:id', async (req, res) => {
-  try {
-    res.status(201).send({
-      status: `success`,
-      success: `successfully patched course information.`
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      status:  `error`,
-      error: "Unable to patch course information."
+router.patch('/:id', requireAuthentication, async (req, res) => {
+  const id = parseInt(req.params.id);
+  const course = await getCourseById(id);
+  if (course != null) {
+    if (course.instructor_id == req.user || req.role == 'admin') {
+      // if (validateFieldsForPatch(req.body, CourseSchema)) {
+        try {
+          const updateSuccessful = await patchCourseById(id, req.body);
+          if (updateSuccessful) {
+            res.status(200).send({
+              links: {
+                status: `success`,
+                success: `successfully patched course information.`,
+                course: `/courses/${id}`
+              }
+            });
+          } else {
+            next();
+          }
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({
+            status:  `error`,
+            error: "Unable to patch course information."
+          });
+        }
+      // } else {
+      //   res.status(400).send({
+      //     error: "Request body is not a valid course object."
+      //   });
+      // }
+    } else {
+      res.status(403).send({
+            error: "Unauthorized to patch the resource."
+      });
+    }
+  } else {
+    res.status(404).send({
+          error: "Course not found."
     });
   }
+
 });
 
 /*
