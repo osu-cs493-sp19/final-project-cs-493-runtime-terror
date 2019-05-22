@@ -107,3 +107,24 @@ function getCourseById(id) {
   });
 }
 exports.getCourseById = getCourseById;
+
+/*
+ * Updates course db entry
+ */
+function patchCourseById(id, course) {
+  return new Promise((resolve, reject) => {
+    course = extractValidFields(course, CourseSchema);
+    mysqlPool.query(
+      'UPDATE courses SET subject = COALESCE(?,subject), number = COALESCE(?,number), title = COALESCE(?,title), term = COALESCE(?,term), instructor_id = COALESCE(?,instructor_id) WHERE id = ?',
+      [ course.subject, course.number, course.title, course.term, course.instructor_id, id ],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.affectedRows > 0);
+        }
+      }
+    );
+  });
+}
+exports.patchCourseById = patchCourseById;
