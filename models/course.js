@@ -14,54 +14,96 @@ const CourseSchema = {
   };
   exports.CourseSchema = CourseSchema;
 
-  /*
-   * Queries our db to get the number of courses.
-   */
-   function getCoursesCount(specifiedSubject, specifiedCourseNumber, specifiedTerm) {
-     return new Promise((resolve, reject) => {
+/*
+ * Queries our db to get the number of courses.
+ */
+ function getCoursesCount(specifiedSubject, specifiedCourseNumber, specifiedTerm) {
+   return new Promise((resolve, reject) => {
+     mysqlPool.query(
+       'SELECT COUNT(*) AS count FROM courses WHERE (subject = COALESCE(?,subject)) AND (number = COALESCE(?,number)) AND (term = COALESCE(?,term))',
+       [ specifiedSubject, specifiedCourseNumber, specifiedTerm],
+       (err, results) => {
+         if(err) {
+           reject(err);
+         } else {
+           resolve(results[0].count);
+         }
+       }
+     );
+   });
+ }
+
+/*
+ * Function that returns an array of courses based on query params. Implements pagination.
+ */
+ function getCoursesPage(page, specifiedSubject, specifiedCourseNumber, specifiedTerm) {
+   return new Promise(async (resolve, reject) => {
+       const count = await getCoursesCount(specifiedSubject, specifiedCourseNumber, specifiedTerm);
+       const pageSize = 10;
+       const lastPage = Math.ceil(count / pageSize);
+       page = page > lastPage ? lastPage : page;
+       page = page < 1 ? 1 : page;
+       const offset = (page - 1) * pageSize;
+
        mysqlPool.query(
-         'SELECT COUNT(*) AS count FROM courses WHERE (subject = COALESCE(?,subject)) AND (number = COALESCE(?,number)) AND (term = COALESCE(?,term))',
-         [ specifiedSubject, specifiedCourseNumber, specifiedTerm],
+         'SELECT * FROM courses WHERE (subject = COALESCE(?,subject)) AND (number = COALESCE(?,number)) AND (term = COALESCE(?,term)) ORDER BY id LIMIT ?,?',
+         [ specifiedSubject, specifiedCourseNumber, specifiedTerm, offset, pageSize ],
          (err, results) => {
-           if(err) {
+           if (err) {
              reject(err);
            } else {
-             resolve(results[0].count);
+             resolve({
+               courses: results,
+               page: page,
+               totalPages: lastPage,
+               pageSize: pageSize,
+               count: count
+             });
            }
          }
        );
-     });
-   }
+   });
+ }
+ exports.getCoursesPage = getCoursesPage;
 
-  /*
-   * Function that returns an array of courses based on query params. Implements pagination.
-   */
-   function getCoursesPage(page, specifiedSubject, specifiedCourseNumber, specifiedTerm) {
-     return new Promise(async (resolve, reject) => {
-         const count = await getCoursesCount(specifiedSubject, specifiedCourseNumber, specifiedTerm);
-         const pageSize = 10;
-         const lastPage = Math.ceil(count / pageSize);
-         page = page > lastPage ? lastPage : page;
-         page = page < 1 ? 1 : page;
-         const offset = (page - 1) * pageSize;
+/*
+* Function that inserts a new course into the db.
+*/
+function insertNewCourse(course) {
+  return new Promise((resolve, reject) => {
+    course = extractValidFields(course, CourseSchema);
+    course.id = null;
+    mysqlPool.query(
+      'INSERT INTO courses SET ?',
+      course,
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.insertId);
+        }
+      }
+    );
+  });
+}
+exports.insertNewCourse = insertNewCourse;
 
-         mysqlPool.query(
-           'SELECT * FROM courses WHERE (subject = COALESCE(?,subject)) AND (number = COALESCE(?,number)) AND (term = COALESCE(?,term)) ORDER BY id LIMIT ?,?',
-           [ specifiedSubject, specifiedCourseNumber, specifiedTerm, offset, pageSize ],
-           (err, results) => {
-             if (err) {
-               reject(err);
-             } else {
-               resolve({
-                 courses: results,
-                 page: page,
-                 totalPages: lastPage,
-                 pageSize: pageSize,
-                 count: count
-               });
-             }
-           }
-         );
-     });
-   }
-   exports.getCoursesPage = getCoursesPage;
+/*
+ * Executes a SQL query that returns a course by id
+ */
+function getCourseById(id) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'SELECT * FROM courses WHERE id = ?',
+      [ id ],
+      (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results[0]);
+        }
+      }
+    );
+  });
+}
+exports.getCourseById = getCourseById;
