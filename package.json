@@ -13,7 +13,7 @@
     "url": "git+https://github.com/osu-cs493-sp19/final-project-cs-493-runtime-terror.git"
   },
   "author": "Garrett Haley <haleyg@oregonstate.edu>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/osu-cs493-sp19/final-project-cs-493-runtime-terror/issues"
   },
@@ -28,5 +28,8 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
+  },
+  "directories": {
+    "lib": "lib"
   }
 }
