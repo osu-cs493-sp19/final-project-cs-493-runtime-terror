@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
 const crypto = require('crypto');
+const moment = require('moment');
 
 const { validateAgainstSchema } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
@@ -200,9 +201,10 @@ router.post('/:id/submissions', requireAuthentication, upload.single('submission
   if (req.file && req.body && req.body.assignment_id) {
       console.log("req.file.path", req.file.path, "req.file.name", req.file.filename);
     try {
+      const time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
       const submission = {
         file: req.file.path,
-        //timestamp: req.body.timestamp,
+        timestamp: time,
         user_id: req.user,
         //contentType: req.file.mimetype,
         assignment_id: req.body.assignment_id
