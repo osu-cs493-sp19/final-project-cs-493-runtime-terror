@@ -6,7 +6,7 @@ const moment = require('moment');
 const { validateAgainstSchema } = require('../lib/validation');
 const { generateAuthToken, requireAuthentication } = require('../lib/auth');
 const {AssignmentSchema, insertNewAssignment, getAssignmentById, updateAssignmentById, deleteAssignmentById} = require('../models/assignment');
-const {SubmissionSchema, saveNewSubmissionInfo} = require('../models/submission');
+const {SubmissionSchema, saveNewSubmissionInfo, getSubmissionInfoById, getSubmissionsPage} = require('../models/submission');
 const { getCourseById } = require('../models/course');
 
 const fileTypes = {
@@ -174,21 +174,36 @@ router.delete('/:id', requireAuthentication, async (req, res) => {
 });
 
 /*
- * returns all submissions of a given assignment
+ * returns all submissions of a given assignment, paginated, can search by student id
+ * example query: http://localhost:8000/assignments/1/submissions?studentid=12&page=1
  */
-router.get('/:id/submissions', async (req, res) => {  
+router.get('/:id/submissions', requireAuthentication, async (req, res) => {  
+    const studentid = parseInt(req.query.studentid) || null;
+    const submissionsPage = parseInt(req.query.page) || 1;
   try {
-    res.status(201).send({
-      status: `success`,
-      success: `All submissions successfully fetched.`
-    });
+      const assignInfo = await getAssignmentById(parseInt(req.params.id));
+      const isInstruct = await getCourseById(assignInfo.course_id);
+      if(req.role === "admin" || req.user === isInstruct.instructor_id){
+        const allAssignSubmissions = await getSubmissionInfoById(parseInt(req.params.id), studentid, submissionsPage);
+        res.status(201).send({
+          status: `success`,
+          allAssignSubmissions,
+          success: `All submissions successfully fetched.`
+        });
+      
+      }
+      else{
+          res.status(403).send({
+                error: "Unauthorized to access this page"
+            });
+      }
   } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      status: `error`,
-      error: "Unable to fetch all submissions"
-    });
-  }
+        console.error(err);
+        res.status(500).send({
+          status: `error`,
+          error: "Unable to fetch all submissions"
+        });
+      }
 });
 
 /*
@@ -203,7 +218,7 @@ router.post('/:id/submissions', requireAuthentication, upload.single('submission
     try {
       const time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
       const submission = {
-        file: req.file.path,
+        file: `/courses/assignments/submissions/${req.file.filename}`,
         timestamp: time,
         user_id: req.user,
         //contentType: req.file.mimetype,
@@ -219,18 +234,5 @@ router.post('/:id/submissions', requireAuthentication, upload.single('submission
       err: "Request body was invalid."
     });
   }
-  
-  /*try {
-    res.status(201).send({
-      status: `success`,
-      success: `New submission submitted.`
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      status: "error",
-      error: `Unable to submit new submission.`
-    });
-  }*/
 });
 module.exports = router;
