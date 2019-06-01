@@ -15,6 +15,20 @@ const CourseSchema = {
   exports.CourseSchema = CourseSchema;
 
 /*
+ * Schema describing fields of a user object
+ * specifically for patches
+ */
+const CourseSchemaForPatch = {
+    id: { required: false },
+    subject: { required: false },
+    number: { required: false },
+    title: { required: false },
+    term: { required: false },
+    instructor_id: { required: false }
+  };
+  exports.CourseSchemaForPatch = CourseSchemaForPatch;
+
+/*
  * Queries our db to get the number of courses.
  */
  function getCoursesCount(specifiedSubject, specifiedCourseNumber, specifiedTerm) {
@@ -128,3 +142,110 @@ function patchCourseById(id, course) {
   });
 }
 exports.patchCourseById = patchCourseById;
+
+/*
+ * Executes a SQL query that deltes a course by id
+ */
+function deleteCourseById(id) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'DELETE FROM courses WHERE id = ?',
+      [ id ],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.affectedRows > 0);
+        }
+      }
+    );
+  });
+}
+exports.deleteCourseById = deleteCourseById;
+
+function getStudentsByCourseId(id) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'SELECT users.id FROM users INNER JOIN course_enrollment ON users.id = course_enrollment.student_id WHERE course_id = ?',
+      [ id ],
+      (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({
+            students: results
+          });
+        }
+      }
+    );
+  });
+};
+exports.getStudentsByCourseId = getStudentsByCourseId;
+
+function unenrollStudentsFromCourseById(studentId) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'DELETE FROM course_enrollment WHERE student_id = ?',
+      [ studentId ],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.affectedRows > 0);
+        }
+      }
+    );
+  });
+};
+exports.unenrollStudentsFromCourseById = unenrollStudentsFromCourseById;
+
+function enrollStudentsToCourseById(studentId, courseId) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'INSERT INTO course_enrollment SET student_id = ?, course_id = ?',
+      [ studentId, courseId ],
+      (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result.affectedRows > 0);
+        }
+      }
+    );
+  });
+};
+exports.enrollStudentsToCourseById = enrollStudentsToCourseById;
+
+function getStudentRosterByCourseId(id) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'SELECT users.name, users.id, users.email FROM users INNER JOIN course_enrollment ON course_enrollment.student_id = users.id INNER JOIN courses ON courses.id = course_enrollment.course_id WHERE courses.id = ?',
+      [ id ],
+      (err, results) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+exports.getStudentRosterByCourseId = getStudentRosterByCourseId;
+
+function getAssignmentsByCourseId(id) {
+  return new Promise((resolve, reject) => {
+    mysqlPool.query(
+      'SELECT assignments.id FROM assignments INNER JOIN courses on courses.id = assignments.course_id WHERE course_id = ?',
+      [ id ],
+      (err, results) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+exports.getAssignmentsByCourseId = getAssignmentsByCourseId;
